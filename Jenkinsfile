@@ -8,6 +8,20 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/ismaelGTI/training-devopsKUBE.git'
             }
         }
+        stage('Install kubectl') {
+            steps {
+                sh '''
+                    if ! command -v kubectl &> /dev/null; then
+                        echo "Installing kubectl..."
+                        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                        chmod +x kubectl
+                        mv kubectl /usr/local/bin/
+                    else
+                        echo "kubectl is already installed"
+                    fi
+                '''
+            }
+        }
         stage('Verify Kubernetes Connection') {
             steps {
                 // Verifica la conexión con el clúster
